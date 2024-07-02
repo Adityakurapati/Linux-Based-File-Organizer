@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Sorter</title>
+
+    <!-- Link the CSS for Icons from Iconscout -->
+    <link rel="stylesheet" type="text/css" href="https://link.to/iconscout-styles.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+
+<body class="responsive-body">
+    <header>
+        <div class="icon__box">
+            <a href="#" class="text-size-normal">Sort8</a>
+            <img src="/images/data.png" class="file__logo" />
+        </div>
+        <nav>
+            <a href="#" class="text-size-normal">Home</a>
+            <a href="#" class="text-size-normal">About</a>
+            <a href="#" class="text-size-normal">Contact</a>
+        </nav>
+    </header>
+    <div class='input__container'>
+        <h2 class="box__heading">Let's Sort Your Directory</h2>
+        <a href="sort" class="text-size-normal">Now </a>
+
+        <h1 class="text__bold">File Sorter</h1>
+
+        <form action="/sort" method="post" id="sortForm">
+            <label for="dirPath" class="text-bold text-size-normal">Directory Path:</label>
+            <input type="text" id="dirPath" name="dirPath" required placeholder="Enter Your Directory Path">
+        
+            <label for="sortCriteria" class="text-bold text-size-normal">Sort Criteria:</label>
+            <select id="sortCriteria" name="sortCriteria" required class="text-size-normal">
+                <option value="1">Sort by name</option>
+                <option value="2">Sort by size</option>
+                <option value="3">Sort by date</option>
+            </select>
+        
+            <button type="submit" class="btn__primary">Sort</button>
+        </form>
+        
+        
+    </div>
+    <div id="result-container">
+        <span>Result: </span>
+        <div id="result"></div>
+    </div>
+    <div class='file__icon'></div>
+    <div class='blur__icon'></div>
+    <div class='blue-ball'></div>
+    <div class='red-ball'></div>
+
+    <script>
+        const form = document.getElementById('sortForm');
+const resultDiv = document.getElementById('result');
+const resultContainer = document.getElementById('result-container');
+
+form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const dirPath = document.getElementById('dirPath').value;
+    const sortCriteria = document.getElementById('sortCriteria').value;
+
+    console.log("Client:", dirPath);
+    console.log("ClientCriteria:", sortCriteria);
+
+    const formData = new FormData();
+    formData.append('dirPath', dirPath);
+    formData.append('sortCriteria', sortCriteria);
+
+    console.log(formData);
+
+    try {
+        const response = await fetch('/sort', {
+            method: 'POST',
+            body: formData,
+        });
+
+        const result = await response.text();
+        console.log("Result ", result);
+        resultDiv.innerHTML = `<pre>${result}</pre>`;
+        resultContainer.style.display = 'block'; // Show the result container
+    } catch (error) {
+        console.error("Error:", error);
+        resultDiv.innerHTML = '<pre>Error occurred. Please try again.</pre>';
+        resultContainer.style.display = 'block'; // Show the result container even on error
+    }
+});
+
+    </script>
+</body>
+
+</html>
